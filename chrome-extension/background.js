@@ -19,38 +19,51 @@ function isSalesforceDomain(url) {
 async function getSessionId(url) {
   try {
     const urlObj = new URL(url);
-    const domain = urlObj.hostname;
+    const hostname = urlObj.hostname;
     
-    // Try to get cookies from the current domain
-    const cookies = await chrome.cookies.getAll({ url: url });
+    // Extract the instance identifier (e.g., 'co1754479384179' from 'co1754479384179.lightning.force.com')
+    const instanceMatch = hostname.match(/^([^.]+)\./);
+    const instanceId = instanceMatch ? instanceMatch[1] : null;
     
-    // Look for 'sid' cookie
+    console.log('Looking for sid cookie for instance:', instanceId);
+    
+    // Priority order for trying different domains:
+    // 1. .my.salesforce.com (preferred for SF CLI)
+    // 2. .lightning.force.com (Lightning Experience)
+    // 3. .file.force.com (Files)
+    // 4. Current domain
+    
     let sessionId = null;
+    const domainsToTry = [];
     
-    for (const cookie of cookies) {
-      if (cookie.name === 'sid') {
-        sessionId = cookie.value;
-        console.log('Found sid cookie:', sessionId);
-        break;
-      }
+    if (instanceId) {
+      // Construct URLs for each domain to try
+      domainsToTry.push(
+        `https://${instanceId}.my.salesforce.com`,
+        `https://${instanceId}.lightning.force.com`,
+        `https://${instanceId}.file.force.com`
+      );
     }
     
-    // If not found, try to get from my.salesforce.com domain
-    if (!sessionId && (domain.endsWith('.force.com') || domain === 'force.com')) {
-      const mySalesforceCookies = await chrome.cookies.getAll({ 
-        domain: '.salesforce.com' 
-      });
+    // Add current URL as fallback
+    domainsToTry.push(url);
+    
+    // Try each domain in order
+    for (const domainUrl of domainsToTry) {
+      console.log('Trying to get sid cookie from:', domainUrl);
+      const cookies = await chrome.cookies.getAll({ url: domainUrl });
       
-      for (const cookie of mySalesforceCookies) {
+      for (const cookie of cookies) {
         if (cookie.name === 'sid') {
           sessionId = cookie.value;
-          console.log('Found sid cookie from .salesforce.com:', sessionId);
-          break;
+          console.log('Found sid cookie from', domainUrl, ':', sessionId);
+          return sessionId;
         }
       }
     }
     
-    return sessionId;
+    console.log('No sid cookie found in any domain');
+    return null;
   } catch (error) {
     console.error('Error getting session ID:', error);
     return null;
