@@ -1,4 +1,4 @@
-# SIID Chrome Extension - New Behavior
+# SIID Chrome Extension - Changes
 
 ## 🎯 Direct Click Action (No UI)
 
@@ -13,25 +13,26 @@ Click "Open in SIID" Button
 Protocol Opens: siid://session-id
 ```
 
-### After (New Behavior) ✨
+### Current Behavior ✨
 ```
 User on Salesforce → Clicks Extension Icon → Protocol Opens Immediately!
                                               ↓
-                                         siid://session-id
-                                         (No popup, no UI)
+                                    siid://session-id?instanceUrl=...
+                                    (No popup, no UI)
 ```
 
-## 🔧 Key Changes
+## 🔧 Latest Updates
 
-### Removed
-- ❌ popup.html
-- ❌ popup.js
-- ❌ popup.css
-- ❌ PREVIEW.html
-- ❌ `default_popup` from manifest.json
+### v1.1.0 - Instance URL Support
+- ✅ Added instance URL extraction from current tab
+- ✅ Updated protocol format: `siid://[sessionId]?instanceUrl=[encodedUrl]`
+- ✅ Passes both session ID and instance URL to VSCode extension
+- ✅ Enables full automation of Salesforce project setup
 
-### Added
-- ✅ `chrome.action.onClicked` listener in background.js
+### v1.0.0 - Initial Release
+- ❌ Removed popup.html, popup.js, popup.css, PREVIEW.html
+- ❌ Removed `default_popup` from manifest.json
+- ✅ Added `chrome.action.onClicked` listener in background.js
 - ✅ Direct protocol launch on click
 
 ## 🎨 Icon States
@@ -39,7 +40,7 @@ User on Salesforce → Clicks Extension Icon → Protocol Opens Immediately!
 ### On Salesforce Domains (*.salesforce.com, *.force.com)
 ```
 🟢 Icon: ENABLED (Colored)
-Click Action: Opens siid://[session-id] immediately
+Click Action: Opens siid://[session-id]?instanceUrl=... immediately
 ```
 
 ### On Other Domains

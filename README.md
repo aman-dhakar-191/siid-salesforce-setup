@@ -1,6 +1,6 @@
 # SIID Salesforce Setup
 
-A comprehensive toolkit for managing Salesforce session IDs, consisting of a Chrome extension and VSCode extension.
+A comprehensive toolkit for managing Salesforce session IDs and automating Salesforce project setup, consisting of a Chrome extension and VSCode extension that work together seamlessly.
 
 ## Project Structure
 
@@ -8,12 +8,12 @@ This repository is organized into separate packages:
 
 ```
 ├── chrome-extension/    # Chrome extension for extracting Salesforce session IDs
-└── vscode-extension/   # VSCode extension (coming soon)
+└── vscode-extension/    # VSCode extension for project setup and metadata retrieval
 ```
 
 ## Chrome Extension
 
-The Chrome extension extracts Salesforce session IDs from your browser and opens them using the SIID protocol handler with a single click.
+The Chrome extension extracts Salesforce session IDs and instance URLs from your browser and opens them using the SIID protocol handler with a single click.
 
 ### Features
 
@@ -21,8 +21,9 @@ The Chrome extension extracts Salesforce session IDs from your browser and opens
 2. **Smart Session ID Detection**: Automatically detects session ID from cookies:
    - Checks for `sid` cookie on my.salesforce.com
    - Checks for `sid` cookie on lightning.force.com
-3. **One-Click Integration**: Click the extension icon to immediately open `siid://[session-id]`
-4. **Automatic Icon State**: Icon is enabled only on Salesforce domains
+3. **Instance URL Extraction**: Captures the full Salesforce instance URL
+4. **One-Click Integration**: Click the extension icon to immediately open `siid://[session-id]?instanceUrl=[url]`
+5. **Automatic Icon State**: Icon is enabled only on Salesforce domains
 
 ### Quick Start
 
@@ -33,7 +34,32 @@ The Chrome extension extracts Salesforce session IDs from your browser and opens
 
 ## VSCode Extension
 
-Coming soon! Will provide protocol handler registration and additional Salesforce development tools.
+The VSCode extension handles the SIID protocol and automates Salesforce project setup and metadata retrieval.
+
+### Features
+
+1. **URI Protocol Handler**: Receives session ID and instance URL from Chrome extension
+2. **Automatic Project Detection**: Checks if workspace is a Salesforce project (sfdx-project.json)
+3. **Project Creation**: Creates new Salesforce project if needed using `sf` CLI
+4. **Org Authentication**: Authenticates to Salesforce org using the session ID
+5. **Metadata Retrieval**: Automatically retrieves:
+   - Apex Classes
+   - Lightning Web Components (LWC)
+   - Aura Components
+   - Apex Triggers
+   - Custom Objects and Lightning types
+
+### Prerequisites
+
+- VSCode 1.80.0 or higher
+- Salesforce CLI (`sf`) installed and available in PATH
+
+### Quick Start
+
+1. Navigate to the `vscode-extension/` directory
+2. Follow the installation instructions in `vscode-extension/README.md`
+3. Open VSCode and load the extension
+4. Use Chrome extension to trigger the workflow
 
 ## Installation
 
@@ -44,20 +70,90 @@ See individual package READMEs for detailed installation instructions:
 
 ## Usage
 
-1. Install the Chrome extension
-2. Navigate to any Salesforce organization
-3. Click the extension icon (it will be enabled/colored on Salesforce domains)
-4. The SIID protocol handler will open immediately with your session ID
+### Complete Workflow
+
+1. **Install Both Extensions**
+   - Chrome extension in your browser
+   - VSCode extension in VSCode
+
+2. **Open VSCode**
+   - Can be with or without a workspace folder
+
+3. **Navigate to Salesforce**
+   - Open any Salesforce org in Chrome
+   - Extension icon will be enabled (colored)
+
+4. **Click Chrome Extension Icon**
+   - Session ID and instance URL are captured
+   - SIID protocol opens with: `siid://[sessionId]?instanceUrl=[url]`
+
+5. **VSCode Extension Activates**
+   - Receives the URI
+   - Checks for Salesforce project
+   - Creates project if needed
+   - Authenticates to the org
+   - Retrieves metadata
+
+6. **Start Developing**
+   - All metadata is now in your workspace
+   - Org is authenticated and set as default
+   - Begin making changes!
 
 ## Requirements
 
+### Chrome Extension
 - Recent version of Google Chrome (with Manifest V3 support)
 - Salesforce org access
-- SIID protocol handler installed on your system (for the "Open in SIID" feature)
+
+### VSCode Extension
+- VSCode 1.80.0 or higher
+- Salesforce CLI (`sf`) installed
+- Node.js and npm (for development)
 
 ## Development
 
 Each package has its own development setup. See the respective README files for details.
+
+### Chrome Extension Development
+```bash
+cd chrome-extension
+# Load as unpacked extension in chrome://extensions/
+```
+
+### VSCode Extension Development
+```bash
+cd vscode-extension
+npm install
+npm run compile
+# Press F5 in VSCode to debug
+```
+
+## Architecture
+
+```
+┌─────────────────┐
+│ Chrome Browser  │
+│                 │
+│  Salesforce Org │
+│  ↓ Click Icon   │
+└────────┬────────┘
+         │
+         │ siid://sessionId?instanceUrl=...
+         │
+         ▼
+┌─────────────────┐
+│ VSCode          │
+│                 │
+│ 1. Detect/Create│
+│    SF Project   │
+│                 │
+│ 2. Authenticate │
+│    with Session │
+│                 │
+│ 3. Retrieve     │
+│    Metadata     │
+└─────────────────┘
+```
 
 ## Contributing
 
