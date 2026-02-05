@@ -57,14 +57,21 @@ async function getSessionId(url) {
   }
 }
 
-// Function to open the SIID protocol with session ID
-function openSiidProtocol(sessionId) {
+// Function to open the SIID protocol with session ID and instance URL
+function openSiidProtocol(sessionId, instanceUrl) {
   if (!sessionId) {
     console.error('No session ID provided');
     return;
   }
   
-  const siidUrl = `siid://${sessionId}`;
+  if (!instanceUrl) {
+    console.error('No instance URL provided');
+    return;
+  }
+  
+  // Encode the instance URL to be safely passed in the URI
+  const encodedInstanceUrl = encodeURIComponent(instanceUrl);
+  const siidUrl = `siid://${sessionId}?instanceUrl=${encodedInstanceUrl}`;
   console.log('Opening SIID URL:', siidUrl);
   
   // Open the protocol handler URL
@@ -126,7 +133,20 @@ chrome.action.onClicked.addListener(async (tab) => {
   
   if (sessionId) {
     console.log('Session ID found, opening SIID protocol');
-    openSiidProtocol(sessionId);
+    
+    // Extract instance URL (up to .com) from the current tab URL
+    try {
+      const urlObj = new URL(tab.url);
+      const hostname = urlObj.hostname;
+      
+      // Construct the instance URL (protocol + hostname)
+      const instanceUrl = `${urlObj.protocol}//${hostname}`;
+      console.log('Instance URL:', instanceUrl);
+      
+      openSiidProtocol(sessionId, instanceUrl);
+    } catch (error) {
+      console.error('Error extracting instance URL:', error);
+    }
   } else {
     console.error('Session ID not found in cookies');
   }
