@@ -61,6 +61,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Open SIID button click handler
   openSiidBtn.addEventListener('click', () => {
     if (currentSessionId) {
+      // Disable button during operation
+      openSiidBtn.disabled = true;
+      openSiidBtn.style.opacity = '0.6';
+      openSiidBtn.style.cursor = 'not-allowed';
+      
       chrome.runtime.sendMessage({ 
         action: 'openSiid', 
         sessionId: currentSessionId 
@@ -70,7 +75,15 @@ document.addEventListener('DOMContentLoaded', async () => {
           openSiidBtn.textContent = 'Opening...';
           setTimeout(() => {
             openSiidBtn.textContent = 'Open in SIID';
+            openSiidBtn.disabled = false;
+            openSiidBtn.style.opacity = '';
+            openSiidBtn.style.cursor = '';
           }, 1000);
+        } else {
+          // Re-enable on error
+          openSiidBtn.disabled = false;
+          openSiidBtn.style.opacity = '';
+          openSiidBtn.style.cursor = '';
         }
       });
     }

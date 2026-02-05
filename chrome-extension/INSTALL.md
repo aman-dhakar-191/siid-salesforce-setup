@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- Google Chrome (version 88 or higher)
+- Recent version of Google Chrome (with Manifest V3 support)
 - Active Salesforce org access
 - SIID protocol handler installed (optional, for full functionality)
 

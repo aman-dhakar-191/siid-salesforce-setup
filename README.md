@@ -51,7 +51,7 @@ See individual package READMEs for detailed installation instructions:
 
 ## Requirements
 
-- Chrome browser (version 88 or higher for Manifest V3 support)
+- Recent version of Google Chrome (with Manifest V3 support)
 - Salesforce org access
 - SIID protocol handler installed on your system (for the "Open in SIID" feature)
 
