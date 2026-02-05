@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chrome Extension Test Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .test-section {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+    }
+    h2 {
+      color: #667eea;
+      margin-top: 0;
+    }
+    .code {
+      background: #f4f4f4;
+      padding: 10px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      margin: 10px 0;
+    }
+    .success {
+      color: #28a745;
+      font-weight: bold;
+    }
+    .info {
+      color: #667eea;
+      font-weight: bold;
+    }
+    ul {
+      line-height: 1.8;
+    }
+    .screenshot-note {
+      background: #fffacd;
+      padding: 15px;
+      border-left: 4px solid #ffd700;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Chrome Extension - Manual Testing Guide</h1>
+  
+  <div class="screenshot-note">
+    <strong>Note:</strong> Since this is a Chrome extension that requires browser APIs, it cannot be tested directly in this environment. 
+    Please follow the installation and testing steps below.
+  </div>
+
+  <div class="test-section">
+    <h2>✅ Extension Created Successfully</h2>
+    <p>The Chrome extension has been created with the following structure:</p>
+    <ul>
+      <li><strong>manifest.json</strong> - Extension configuration (Manifest V3)</li>
+      <li><strong>background.js</strong> - Service worker for domain detection and session ID extraction</li>
+      <li><strong>content.js</strong> - Content script running on Salesforce pages</li>
+      <li><strong>popup.html/js/css</strong> - User interface</li>
+      <li><strong>icons/</strong> - Extension icons (16px, 48px, 128px)</li>
+    </ul>
+  </div>
+
+  <div class="test-section">
+    <h2>📋 Installation Steps</h2>
+    <ol>
+      <li>Open Chrome browser</li>
+      <li>Navigate to <span class="code">chrome://extensions/</span></li>
+      <li>Enable "Developer mode" (toggle in top right)</li>
+      <li>Click "Load unpacked"</li>
+      <li>Select the <span class="code">chrome-extension</span> directory</li>
+      <li>The extension should now appear in your extensions list</li>
+    </ol>
+  </div>
+
+  <div class="test-section">
+    <h2>🧪 Manual Testing Steps</h2>
+    
+    <h3>Test 1: Extension Icon State</h3>
+    <ol>
+      <li>Open a non-Salesforce website (e.g., google.com)</li>
+      <li><span class="info">Expected:</span> Extension icon should be disabled/grayed out</li>
+      <li>Navigate to a Salesforce org (e.g., https://yourorg.lightning.force.com)</li>
+      <li><span class="success">Expected:</span> Extension icon should be enabled/colored</li>
+    </ol>
+
+    <h3>Test 2: Session ID Extraction (my.salesforce.com)</h3>
+    <ol>
+      <li>Log into a Salesforce org via <span class="code">https://login.salesforce.com</span></li>
+      <li>Navigate to any page in your org</li>
+      <li>Click the extension icon</li>
+      <li><span class="success">Expected:</span> Popup should display:
+        <ul>
+          <li>Current domain name</li>
+          <li>Session ID (starting with "00D...")</li>
+          <li>"Open in SIID" button</li>
+          <li>"Copy Session ID" button</li>
+        </ul>
+      </li>
+    </ol>
+
+    <h3>Test 3: Session ID Extraction (lightning.force.com)</h3>
+    <ol>
+      <li>Navigate to a Lightning Experience URL (e.g., https://yourorg.lightning.force.com)</li>
+      <li>Click the extension icon</li>
+      <li><span class="success">Expected:</span> Popup should display session information</li>
+      <li>The session ID should be successfully extracted from cookies</li>
+    </ol>
+
+    <h3>Test 4: Copy Session ID</h3>
+    <ol>
+      <li>With the popup open, click "Copy Session ID"</li>
+      <li><span class="success">Expected:</span> Button should change to "Copied!" with green styling</li>
+      <li>Paste the clipboard content somewhere</li>
+      <li><span class="success">Expected:</span> The session ID should be pasted</li>
+    </ol>
+
+    <h3>Test 5: Open in SIID</h3>
+    <ol>
+      <li>Click the "Open in SIID" button</li>
+      <li><span class="success">Expected:</span> Browser should attempt to open <span class="code">siid://[session-id]</span></li>
+      <li><span class="info">Note:</span> This requires the SIID protocol handler to be installed on your system</li>
+      <li>If no handler is installed, browser may show a dialog asking how to handle the protocol</li>
+    </ol>
+  </div>
+
+  <div class="test-section">
+    <h2>✨ Key Features Implemented</h2>
+    <ul>
+      <li><strong>Smart Domain Detection:</strong> Extension only activates on Salesforce domains</li>
+      <li><strong>Multi-domain Support:</strong> Handles both my.salesforce.com and lightning.force.com</li>
+      <li><strong>Cookie-based Session Extraction:</strong> Reads 'sid' cookie from appropriate domain</li>
+      <li><strong>SIID Protocol Integration:</strong> Opens siid:// URI with session ID</li>
+      <li><strong>User-Friendly UI:</strong> Clean popup with session info and actions</li>
+      <li><strong>Manifest V3:</strong> Uses latest Chrome extension format</li>
+    </ul>
+  </div>
+
+  <div class="test-section">
+    <h2>🔧 Troubleshooting</h2>
+    <ul>
+      <li><strong>Extension not loading:</strong> Make sure you selected the chrome-extension directory, not a subdirectory</li>
+      <li><strong>Icon not enabling:</strong> Verify you're on a *.salesforce.com or *.force.com domain</li>
+      <li><strong>No session ID found:</strong> Make sure you're logged into Salesforce and have an active session</li>
+      <li><strong>SIID protocol error:</strong> Install the SIID protocol handler on your system first</li>
+    </ul>
+  </div>
+
+  <div class="test-section">
+    <h2>📝 Next Steps</h2>
+    <p>The Chrome extension is complete and ready for use! Here's what you can do next:</p>
+    <ul>
+      <li>Install and test the extension in Chrome</li>
+      <li>Implement the VSCode extension for protocol handler registration</li>
+      <li>Add additional features like session history or multiple org support</li>
+      <li>Publish to Chrome Web Store (optional)</li>
+    </ul>
+  </div>
+
+</body>
+</html>

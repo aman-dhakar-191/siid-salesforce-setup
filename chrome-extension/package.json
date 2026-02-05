@@ -1,0 +1,17 @@
+{
+  "name": "siid-salesforce-session-manager",
+  "version": "1.0.0",
+  "description": "Chrome extension that extracts Salesforce session IDs and opens them in SIID protocol handler",
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aman-dhakar-191/siid-salesforce-setup"
+  },
+  "keywords": [
+    "salesforce",
+    "chrome-extension",
+    "session-manager",
+    "siid"
+  ]
+}
