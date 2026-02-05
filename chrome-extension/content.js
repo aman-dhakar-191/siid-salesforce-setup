@@ -14,7 +14,11 @@ function getCookieValue(name) {
 
 // Check if we're on a Salesforce domain
 const hostname = window.location.hostname;
-const isSalesforce = hostname.includes('salesforce.com') || hostname.includes('force.com');
+// Check if hostname ends with salesforce.com or force.com to prevent false positives
+const isSalesforce = hostname.endsWith('.salesforce.com') || 
+                     hostname === 'salesforce.com' ||
+                     hostname.endsWith('.force.com') || 
+                     hostname === 'force.com';
 
 if (isSalesforce) {
   console.log('SIID Extension: Running on Salesforce domain:', hostname);

@@ -5,7 +5,11 @@ function isSalesforceDomain(url) {
   try {
     const urlObj = new URL(url);
     const hostname = urlObj.hostname;
-    return hostname.includes('salesforce.com') || hostname.includes('force.com');
+    // Check if hostname ends with salesforce.com or force.com to prevent false positives
+    return hostname.endsWith('.salesforce.com') || 
+           hostname === 'salesforce.com' ||
+           hostname.endsWith('.force.com') || 
+           hostname === 'force.com';
   } catch (e) {
     return false;
   }
@@ -32,7 +36,7 @@ async function getSessionId(url) {
     }
     
     // If not found, try to get from my.salesforce.com domain
-    if (!sessionId && domain.includes('lightning.force.com')) {
+    if (!sessionId && (domain.endsWith('.force.com') || domain === 'force.com')) {
       const mySalesforceCookies = await chrome.cookies.getAll({ 
         domain: '.salesforce.com' 
       });
