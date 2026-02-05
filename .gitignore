@@ -1,0 +1,11 @@
+node_modules/
+dist/
+build/
+*.log
+nohup.out
+.DS_Store
+*.crx
+*.pem
+*.zip
+.vscode/
+.idea/

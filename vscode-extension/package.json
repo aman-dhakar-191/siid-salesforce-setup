@@ -1,0 +1,38 @@
+{
+  "name": "siid-salesforce-vscode",
+  "displayName": "SIID Salesforce Setup",
+  "description": "VSCode extension that handles SIID protocol for Salesforce project setup and metadata retrieval",
+  "version": "1.0.0",
+  "publisher": "siid",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onUri"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "siid-salesforce.setupOrg",
+        "title": "SIID: Setup Salesforce Org"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.80.0",
+    "@vscode/vsce": "^3.2.1",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {}
+}
