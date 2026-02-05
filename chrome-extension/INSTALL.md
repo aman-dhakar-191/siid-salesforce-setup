@@ -55,12 +55,11 @@ All permissions are necessary for the extension to function properly.
 ### Basic Usage
 
 1. Open any Salesforce org in Chrome
-2. Click the extension icon
-3. View your session information:
-   - Current domain
-   - Session ID
-4. Click **"Open in SIID"** to launch the SIID protocol handler
-5. Click **"Copy Session ID"** to copy the session ID to clipboard
+2. The extension icon will be enabled (colored) on Salesforce domains
+3. Click the extension icon once
+4. The SIID protocol handler will open immediately with your session ID: `siid://[session-id]`
+
+**Note**: There is no popup UI. Clicking the icon directly triggers the protocol handler.
 
 ### Supported Domains
 

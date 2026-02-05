@@ -13,7 +13,7 @@ This repository is organized into separate packages:
 
 ## Chrome Extension
 
-The Chrome extension extracts Salesforce session IDs from your browser and opens them using the SIID protocol handler.
+The Chrome extension extracts Salesforce session IDs from your browser and opens them using the SIID protocol handler with a single click.
 
 ### Features
 
@@ -21,8 +21,8 @@ The Chrome extension extracts Salesforce session IDs from your browser and opens
 2. **Smart Session ID Detection**: Automatically detects session ID from cookies:
    - Checks for `sid` cookie on my.salesforce.com
    - Checks for `sid` cookie on lightning.force.com
-3. **SIID Protocol Integration**: Opens `siid://` URI with the session ID
-4. **User-Friendly Interface**: Clean popup showing session information
+3. **One-Click Integration**: Click the extension icon to immediately open `siid://[session-id]`
+4. **Automatic Icon State**: Icon is enabled only on Salesforce domains
 
 ### Quick Start
 
@@ -46,8 +46,8 @@ See individual package READMEs for detailed installation instructions:
 
 1. Install the Chrome extension
 2. Navigate to any Salesforce organization
-3. Click the extension icon
-4. Click "Open in SIID" to launch the protocol handler
+3. Click the extension icon (it will be enabled/colored on Salesforce domains)
+4. The SIID protocol handler will open immediately with your session ID
 
 ## Requirements
 

@@ -111,6 +111,27 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
+// Listen for extension icon clicks
+chrome.action.onClicked.addListener(async (tab) => {
+  console.log('Extension icon clicked on tab:', tab.url);
+  
+  // Check if we're on a Salesforce domain
+  if (!isSalesforceDomain(tab.url)) {
+    console.log('Not a Salesforce domain, ignoring click');
+    return;
+  }
+  
+  // Get session ID from cookies
+  const sessionId = await getSessionId(tab.url);
+  
+  if (sessionId) {
+    console.log('Session ID found, opening SIID protocol');
+    openSiidProtocol(sessionId);
+  } else {
+    console.error('Session ID not found in cookies');
+  }
+});
+
 // Listen for tab updates to enable/disable extension icon
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete' && tab.url) {

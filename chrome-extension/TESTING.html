@@ -67,9 +67,9 @@
       <li><strong>manifest.json</strong> - Extension configuration (Manifest V3)</li>
       <li><strong>background.js</strong> - Service worker for domain detection and session ID extraction</li>
       <li><strong>content.js</strong> - Content script running on Salesforce pages</li>
-      <li><strong>popup.html/js/css</strong> - User interface</li>
       <li><strong>icons/</strong> - Extension icons (16px, 48px, 128px)</li>
     </ul>
+    <p><strong>Note:</strong> This is a click-to-action extension with no popup UI.</p>
   </div>
 
   <div class="test-section">
@@ -95,43 +95,37 @@
       <li><span class="success">Expected:</span> Extension icon should be enabled/colored</li>
     </ol>
 
-    <h3>Test 2: Session ID Extraction (my.salesforce.com)</h3>
+    <h3>Test 2: One-Click Session ID Extraction and Protocol Launch</h3>
     <ol>
       <li>Log into a Salesforce org via <span class="code">https://login.salesforce.com</span></li>
       <li>Navigate to any page in your org</li>
-      <li>Click the extension icon</li>
-      <li><span class="success">Expected:</span> Popup should display:
-        <ul>
-          <li>Current domain name</li>
-          <li>Session ID (starting with "00D...")</li>
-          <li>"Open in SIID" button</li>
-          <li>"Copy Session ID" button</li>
-        </ul>
-      </li>
+      <li>Click the extension icon once</li>
+      <li><span class="success">Expected:</span> Browser should immediately attempt to open <span class="code">siid://[session-id]</span></li>
+      <li><span class="info">Note:</span> This requires the SIID protocol handler to be installed on your system</li>
+      <li>If no handler is installed, browser may show a dialog asking how to handle the protocol</li>
+      <li><span class="info">No popup UI should appear</span> - the action happens immediately</li>
     </ol>
 
     <h3>Test 3: Session ID Extraction (lightning.force.com)</h3>
     <ol>
       <li>Navigate to a Lightning Experience URL (e.g., https://yourorg.lightning.force.com)</li>
       <li>Click the extension icon</li>
-      <li><span class="success">Expected:</span> Popup should display session information</li>
+      <li><span class="success">Expected:</span> SIID protocol should open immediately with the session ID</li>
       <li>The session ID should be successfully extracted from cookies</li>
     </ol>
 
-    <h3>Test 4: Copy Session ID</h3>
+    <h3>Test 4: Verify Console Logs (Optional)</h3>
     <ol>
-      <li>With the popup open, click "Copy Session ID"</li>
-      <li><span class="success">Expected:</span> Button should change to "Copied!" with green styling</li>
-      <li>Paste the clipboard content somewhere</li>
-      <li><span class="success">Expected:</span> The session ID should be pasted</li>
-    </ol>
-
-    <h3>Test 5: Open in SIID</h3>
-    <ol>
-      <li>Click the "Open in SIID" button</li>
-      <li><span class="success">Expected:</span> Browser should attempt to open <span class="code">siid://[session-id]</span></li>
-      <li><span class="info">Note:</span> This requires the SIID protocol handler to be installed on your system</li>
-      <li>If no handler is installed, browser may show a dialog asking how to handle the protocol</li>
+      <li>Open Chrome DevTools (F12) and go to the Console tab</li>
+      <li>Navigate to a Salesforce org and click the extension icon</li>
+      <li><span class="success">Expected:</span> You should see console logs showing:
+        <ul>
+          <li>"Extension icon clicked on tab: [url]"</li>
+          <li>"Found sid cookie: [session-id]"</li>
+          <li>"Opening SIID URL: siid://[session-id]"</li>
+        </ul>
+      </li>
+      <li>To view extension logs, go to <span class="code">chrome://extensions/</span>, find the extension, and click "service worker" link</li>
     </ol>
   </div>
 
@@ -141,8 +135,9 @@
       <li><strong>Smart Domain Detection:</strong> Extension only activates on Salesforce domains</li>
       <li><strong>Multi-domain Support:</strong> Handles both my.salesforce.com and lightning.force.com</li>
       <li><strong>Cookie-based Session Extraction:</strong> Reads 'sid' cookie from appropriate domain</li>
-      <li><strong>SIID Protocol Integration:</strong> Opens siid:// URI with session ID</li>
-      <li><strong>User-Friendly UI:</strong> Clean popup with session info and actions</li>
+      <li><strong>One-Click Integration:</strong> Click icon to immediately open siid:// URI with session ID</li>
+      <li><strong>Automatic Icon State:</strong> Icon enabled only on Salesforce domains</li>
+      <li><strong>No Popup UI:</strong> Direct action on icon click</li>
       <li><strong>Manifest V3:</strong> Uses latest Chrome extension format</li>
     </ul>
   </div>
