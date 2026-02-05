@@ -17,16 +17,22 @@ Protocol Opens: siid://session-id
 ```
 User on Salesforce → Clicks Extension Icon → Protocol Opens Immediately!
                                               ↓
-                                    siid://session-id?instanceUrl=...
-                                    (No popup, no UI)
+                    siid://siid.siid-salesforce-vscode/setup?sessionId=...&instanceUrl=...
+                                     (No popup, no UI)
 ```
 
 ## 🔧 Latest Updates
 
+### v1.2.0 - Fixed URI Schema
+- ✅ Fixed URI format to include extension ID in path
+- ✅ Both parameters now in query string: `?sessionId=...&instanceUrl=...`
+- ✅ Format: `siid://siid.siid-salesforce-vscode/setup?sessionId=...&instanceUrl=...`
+- ✅ Compatible with SIID IDE (VSCode fork)
+
 ### v1.1.0 - Instance URL Support
 - ✅ Added instance URL extraction from current tab
-- ✅ Updated protocol format: `siid://[sessionId]?instanceUrl=[encodedUrl]`
-- ✅ Passes both session ID and instance URL to VSCode extension
+- ✅ Updated protocol format to include instance URL
+- ✅ Passes both session ID and instance URL to SIID extension
 - ✅ Enables full automation of Salesforce project setup
 
 ### v1.0.0 - Initial Release
@@ -40,7 +46,7 @@ User on Salesforce → Clicks Extension Icon → Protocol Opens Immediately!
 ### On Salesforce Domains (*.salesforce.com, *.force.com)
 ```
 🟢 Icon: ENABLED (Colored)
-Click Action: Opens siid://[session-id]?instanceUrl=... immediately
+Click Action: Opens siid://siid.siid-salesforce-vscode/setup?sessionId=...&instanceUrl=... immediately
 ```
 
 ### On Other Domains
@@ -63,7 +69,7 @@ Click Action: Nothing happens (icon is disabled)
    
 4. **Instant Action**
    - Session ID extracted from cookies
-   - Protocol opens: `siid://00D5g000008kI2F!AQcAQ...`
+   - Protocol opens: `siid://siid.siid-salesforce-vscode/setup?sessionId=...&instanceUrl=...`
    - No popup, no intermediate steps
 
 ## 🔐 Security
@@ -78,7 +84,7 @@ Click Action: Nothing happens (icon is disabled)
 ### Session ID Extraction Logic
 1. Check current domain cookies for 'sid' cookie
 2. If not found and on *.force.com, fallback to .salesforce.com domain
-3. Pass session ID to `siid://` protocol handler
+3. Pass session ID and instance URL to `siid://` protocol handler
 
 ### Domain Detection
 - Uses `hostname.endsWith('.salesforce.com')` pattern
@@ -91,8 +97,10 @@ chrome.action.onClicked.addListener(async (tab) => {
   if (!isSalesforceDomain(tab.url)) return;
   
   const sessionId = await getSessionId(tab.url);
+  const instanceUrl = extractInstanceUrl(tab.url);
   if (sessionId) {
-    openSiidProtocol(sessionId); // Opens siid://[session-id]
+    openSiidIDE(sessionId, instanceUrl);
+    // Opens siid://siid.siid-salesforce-vscode/setup?sessionId=...&instanceUrl=...
   }
 });
 ```

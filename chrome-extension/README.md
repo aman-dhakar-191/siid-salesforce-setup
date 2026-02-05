@@ -27,8 +27,8 @@ A Chrome extension that extracts Salesforce session IDs and instance URLs, then 
 1. Navigate to any Salesforce organization (e.g., https://yourorg.lightning.force.com)
 2. The extension icon will be enabled (colored, not grayed out)
 3. Click the extension icon
-4. The SIID protocol handler will open immediately with: `siid://[session-id]?instanceUrl=[encoded-url]`
-5. VSCode extension (if installed) will receive this and set up your development environment
+4. The SIID protocol handler will open immediately with: `siid://siid.siid-salesforce-vscode/setup?sessionId=...&instanceUrl=...`
+5. SIID IDE (if installed) will receive this and set up your development environment
 
 **Note**: The extension icon will be disabled (grayed out) when not on a Salesforce domain.
 

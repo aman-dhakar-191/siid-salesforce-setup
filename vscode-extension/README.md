@@ -55,8 +55,10 @@ A VSCode extension that handles the `siid://` protocol for automatic Salesforce 
 
 The Chrome extension opens a URI in this format:
 ```
-siid://[sessionId]?instanceUrl=https://instance.salesforce.com
+siid://siid.siid-salesforce-vscode/setup?sessionId=...&instanceUrl=https://instance.salesforce.com
 ```
+
+**Note**: Both `sessionId` and `instanceUrl` are passed as query parameters.
 
 ### Workflow
 

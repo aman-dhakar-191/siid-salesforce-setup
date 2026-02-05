@@ -1,6 +1,8 @@
 # SIID Salesforce Setup
 
-A comprehensive toolkit for managing Salesforce session IDs and automating Salesforce project setup, consisting of a Chrome extension and VSCode extension that work together seamlessly.
+A comprehensive toolkit for managing Salesforce session IDs and automating Salesforce project setup, consisting of a Chrome extension and SIID extension that work together seamlessly.
+
+**Note**: SIID is a fork of VSCode, so the extension works with SIID IDE using the `siid://` protocol handler.
 
 ## Project Structure
 
@@ -8,7 +10,7 @@ This repository is organized into separate packages:
 
 ```
 ├── chrome-extension/    # Chrome extension for extracting Salesforce session IDs
-└── vscode-extension/    # VSCode extension for project setup and metadata retrieval
+└── vscode-extension/    # SIID extension for project setup and metadata retrieval
 ```
 
 ## Chrome Extension
@@ -22,7 +24,7 @@ The Chrome extension extracts Salesforce session IDs and instance URLs from your
    - Checks for `sid` cookie on my.salesforce.com
    - Checks for `sid` cookie on lightning.force.com
 3. **Instance URL Extraction**: Captures the full Salesforce instance URL
-4. **One-Click Integration**: Click the extension icon to immediately open `siid://[session-id]?instanceUrl=[url]`
+4. **One-Click Integration**: Click the extension icon to immediately open `siid://siid.siid-salesforce-vscode/setup?sessionId=...&instanceUrl=...`
 5. **Automatic Icon State**: Icon is enabled only on Salesforce domains
 
 ### Quick Start
@@ -32,9 +34,11 @@ The Chrome extension extracts Salesforce session IDs and instance URLs from your
 3. Load the extension in Chrome
 4. Visit any Salesforce org and click the extension icon
 
-## VSCode Extension
+## SIID Extension
 
-The VSCode extension handles the SIID protocol and automates Salesforce project setup and metadata retrieval.
+The SIID extension handles the SIID protocol and automates Salesforce project setup and metadata retrieval.
+
+**Note**: Works with SIID IDE (a VSCode fork) or VSCode itself.
 
 ### Features
 

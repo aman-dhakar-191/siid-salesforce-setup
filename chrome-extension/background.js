@@ -57,8 +57,8 @@ async function getSessionId(url) {
   }
 }
 
-// Function to open the SIID protocol with session ID and instance URL
-function openSiidProtocol(sessionId, instanceUrl) {
+// Function to open the SIID IDE with session ID and instance URL
+function openSiidIDE(sessionId, instanceUrl) {
   if (!sessionId) {
     console.error('No session ID provided');
     return;
@@ -69,9 +69,12 @@ function openSiidProtocol(sessionId, instanceUrl) {
     return;
   }
   
-  // Encode the instance URL to be safely passed in the URI
+  // Create SIID URL with extension ID
+  // Format: siid://publisher.extension-name/path?sessionId=value&instanceUrl=value
+  // Both parameters in query string, not in authority
+  const encodedSessionId = encodeURIComponent(sessionId);
   const encodedInstanceUrl = encodeURIComponent(instanceUrl);
-  const siidUrl = `siid://${sessionId}?instanceUrl=${encodedInstanceUrl}`;
+  const siidUrl = `siid://siid.siid-salesforce-vscode/setup?sessionId=${encodedSessionId}&instanceUrl=${encodedInstanceUrl}`;
   console.log('Opening SIID URL:', siidUrl);
   
   // Open the protocol handler URL
@@ -112,7 +115,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
   
   if (request.action === 'openSiid') {
-    openSiidProtocol(request.sessionId);
+    openSiidIDE(request.sessionId, request.instanceUrl);
     sendResponse({ success: true });
     return true;
   }
@@ -132,7 +135,7 @@ chrome.action.onClicked.addListener(async (tab) => {
   const sessionId = await getSessionId(tab.url);
   
   if (sessionId) {
-    console.log('Session ID found, opening SIID protocol');
+    console.log('Session ID found, opening SIID IDE');
     
     // Extract instance URL (up to .com) from the current tab URL
     try {
@@ -143,7 +146,7 @@ chrome.action.onClicked.addListener(async (tab) => {
       const instanceUrl = `${urlObj.protocol}//${hostname}`;
       console.log('Instance URL:', instanceUrl);
       
-      openSiidProtocol(sessionId, instanceUrl);
+      openSiidIDE(sessionId, instanceUrl);
     } catch (error) {
       console.error('Error extracting instance URL:', error);
     }

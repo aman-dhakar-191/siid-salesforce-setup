@@ -56,10 +56,12 @@ function deactivate() { }
 class SiidUriHandler {
     async handleUri(uri) {
         console.log('Received URI:', uri.toString());
+        console.log('URI path:', uri.path);
+        console.log('URI query:', uri.query);
         try {
-            // Parse the URI: siid://sessionId?instanceUrl=https://instance.salesforce.com
-            const sessionId = uri.authority;
+            // Parse the URI: vscode://siid.siid-salesforce-vscode/setup?sessionId=...&instanceUrl=...
             const queryParams = new URLSearchParams(uri.query);
+            const sessionId = queryParams.get('sessionId');
             const instanceUrl = queryParams.get('instanceUrl');
             if (!sessionId) {
                 vscode.window.showErrorMessage('No session ID provided in URI');
